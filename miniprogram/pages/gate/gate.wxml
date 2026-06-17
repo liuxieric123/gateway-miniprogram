@@ -1,0 +1,65 @@
+<!--pages/gate/gate.wxml-->
+<view class="custom-nav" style="height: {{navHeight}}px; padding-top: {{statusBarHeight}}px;">
+  <view class="nav-back" bindtap="goBack">
+    <text class="nav-back-icon">←</text>
+  </view>
+  <image class="nav-title-img" src="/images/kuji-title-kuji.png" mode="heightFix" />
+</view>
+
+<view class="container" style="padding-top: {{navHeight}}px;">
+  <!-- 无权限提示 -->
+  <view class="no-permission" wx:if="{{!hasPermission}}">
+    <view class="lock-icon">🔒</view>
+    <view class="no-perm-title">暂无操作权限</view>
+    <view class="no-perm-desc">您还没有被授权操作闸门</view>
+    <view class="openid-box">
+      <view class="openid-label">您的微信 OpenID</view>
+      <view class="openid-value" selectable>{{openid || '获取中...'}}</view>
+      <view class="openid-tip">请把上面的 ID 发给管理员添加权限</view>
+    </view>
+  </view>
+
+  <!-- 有权限：控制按钮 -->
+  <view class="control-area" wx:if="{{hasPermission}}">
+    <button
+      class="gate-btn btn-open"
+      bindtap="openGate"
+      disabled="{{isLoading || cooldown}}"
+    >
+      <image class="btn-icon-img" src="/images/kuji-open.svg" mode="aspectFit" />
+      <text class="btn-text">开门</text>
+    </button>
+
+    <button
+      class="gate-btn btn-close"
+      bindtap="closeGate"
+      disabled="{{isLoading || cooldown}}"
+    >
+      <image class="btn-icon-img" src="/images/kuji-close.svg" mode="aspectFit" />
+      <text class="btn-text">关门</text>
+    </button>
+
+    <view class="temp-link-bar" bindtap="generateTempLink">
+      <text class="temp-link-icon">🔗</text>
+      <text class="temp-link-text">生成临时开关门链接（1小时有效）</text>
+    </view>
+  </view>
+
+  <!-- 临时链接弹窗 -->
+  <view class="temp-modal {{showTempModal ? 'show' : ''}}" bindtap="closeTempModal">
+    <view class="temp-content" catchtap="preventClose">
+      <view class="temp-header">
+        <text class="temp-title">临时开关门链接</text>
+        <text class="temp-close" bindtap="closeTempModal">✕</text>
+      </view>
+      <view class="temp-body">
+        <view class="temp-hint">有效期至今天 {{tempExpireTime}}（1小时）</view>
+        <view class="temp-link-box" selectable>{{tempLink}}</view>
+        <view class="temp-actions">
+          <button class="temp-btn copy" bindtap="copyTempLink">复制链接</button>
+          <button class="temp-btn share" open-type="share">分享给好友</button>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,17 @@
+<!--index.wxml-->
+<view class="container">
+  <view class="hero">
+    <view class="handwriting-wrapper">
+      <image class="handwriting-yo" src="/images/kuji-title-yo.png" mode="aspectFit" />
+      <image class="handwriting-kuji" src="/images/kuji-title-kuji.png" mode="aspectFit" />
+    </view>
+  </view>
+
+  <view class="menu-grid">
+    <view class="menu-card" bindtap="goToGate" hover-class="menu-card-hover">
+      <image class="menu-icon-img" src="/images/kuji-door.svg" mode="aspectFit" />
+      <view class="menu-title">闸门控制</view>
+      <view class="menu-desc">远程控制庄园闸门</view>
+    </view>
+  </view>
+</view>

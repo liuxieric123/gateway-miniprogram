@@ -1,0 +1,9 @@
+{
+  "name": "gateFunctions",
+  "version": "1.0.0",
+  "description": "库吉云函数，包含权限检查和操作记录",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none" stroke="#C0392B" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- 地面 -->
+  <path d="M15 165 Q100 162 185 165" stroke-width="4" />
+  <!-- 机箱 -->
+  <rect x="35" y="85" width="44" height="80" rx="6" />
+  <!-- 机箱顶盖 -->
+  <path d="M33 85 Q57 80 81 85" stroke-width="4" />
+  <!-- 放下的道闸杆 -->
+  <path d="M77 105 Q120 102 175 100" stroke-width="9" />
+  <!-- 杆头 -->
+  <circle cx="175" cy="100" r="7" fill="#C0392B" stroke="none" />
+  <!-- 禁止通行 -->
+  <circle cx="145" cy="140" r="18" stroke-width="5" />
+  <path d="M133 128 L157 152" stroke-width="5" />
+  <!-- 红灯 -->
+  <circle cx="57" cy="105" r="6" fill="#C0392B" stroke="none" />
+</svg>

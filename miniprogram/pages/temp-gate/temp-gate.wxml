@@ -1,0 +1,43 @@
+<!--pages/temp-gate/temp-gate.wxml-->
+<view class="container">
+  <!-- 验证中 -->
+  <view class="checking" wx:if="{{status === 'checking'}}">
+    <view class="loading-icon">⏳</view>
+    <view class="loading-text">正在验证权限...</view>
+  </view>
+
+  <!-- 链接无效/过期 -->
+  <view class="invalid" wx:if="{{status === 'invalid'}}">
+    <view class="invalid-icon">⛔</view>
+    <view class="invalid-title">链接已失效</view>
+    <view class="invalid-desc">该临时链接已过期或不存在</view>
+  </view>
+
+  <!-- 权限有效：开关按钮 -->
+  <view class="valid-area" wx:if="{{status === 'valid'}}">
+    <view class="countdown-bar">
+      <text class="countdown-label">⏱ 剩余时间</text>
+      <text class="countdown-value">{{remainTimeStr}}</text>
+    </view>
+
+    <view class="hint">您可以临时控制闸门开关</view>
+
+    <button
+      class="gate-btn btn-open"
+      bindtap="openGate"
+      disabled="{{isLoading || cooldown}}"
+    >
+      <image class="btn-icon-img" src="/images/kuji-open.svg" mode="aspectFit" />
+      <text class="btn-text">开门</text>
+    </button>
+
+    <button
+      class="gate-btn btn-close"
+      bindtap="closeGate"
+      disabled="{{isLoading || cooldown}}"
+    >
+      <image class="btn-icon-img" src="/images/kuji-close.svg" mode="aspectFit" />
+      <text class="btn-text">关门</text>
+    </button>
+  </view>
+</view>

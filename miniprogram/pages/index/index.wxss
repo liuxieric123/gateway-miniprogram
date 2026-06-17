@@ -1,0 +1,135 @@
+/**index.wxss**/
+page {
+  background-color: #F7F6F3;
+  min-height: 100vh;
+}
+
+.container {
+  padding: 60rpx 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.hero {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20rpx;
+}
+
+.handwriting-wrapper {
+  width: 100%;
+  max-width: 680rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.handwriting-yo {
+  width: 150%;
+  height: 490rpx;
+  display: block;
+  animation: yoFloat 2.5s ease-in-out infinite;
+  transform-origin: center center;
+  position: absolute;
+  top: -320rpx;
+  left: -220rpx;
+}
+
+.handwriting-kuji {
+  width: 55%;
+  height: 260rpx;
+  display: block;
+  animation: kujiFloat 2.5s ease-in-out infinite 0.3s;
+  transform-origin: center center;
+  margin-left: auto;
+}
+
+@keyframes yoFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(10deg) scale(1);
+  }
+  25% {
+    transform: translateY(-20rpx) rotate(14deg) scale(1.06);
+  }
+  50% {
+    transform: translateY(0) rotate(11deg) scale(0.96);
+  }
+  75% {
+    transform: translateY(20rpx) rotate(13deg) scale(1.04);
+  }
+}
+
+@keyframes kujiFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(-15deg) scale(1);
+  }
+  25% {
+    transform: translateY(-20rpx) rotate(-11deg) scale(1.06);
+  }
+  50% {
+    transform: translateY(0) rotate(-14deg) scale(0.96);
+  }
+  75% {
+    transform: translateY(20rpx) rotate(-12deg) scale(1.04);
+  }
+}
+
+.menu-grid {
+  width: 100%;
+  max-width: 700rpx;
+  flex-shrink: 0;
+}
+
+.menu-card {
+  background: #FFFFFF;
+  border-radius: 36rpx;
+  padding: 80rpx 50rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 8rpx 30rpx rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: cardFloat 3s ease-in-out infinite;
+}
+
+.menu-card-hover {
+  transform: scale(0.98);
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
+}
+
+@keyframes cardFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-16rpx) rotate(1.5deg);
+  }
+}
+
+.menu-icon-img {
+  width: 160rpx;
+  height: 160rpx;
+  margin-bottom: 30rpx;
+}
+
+.menu-title {
+  font-size: 56rpx;
+  font-weight: 700;
+  color: #37352F;
+  margin-bottom: 18rpx;
+  letter-spacing: 2rpx;
+}
+
+.menu-desc {
+  font-size: 32rpx;
+  color: #6B6B6B;
+  line-height: 1.5;
+}

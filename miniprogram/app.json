@@ -1,0 +1,19 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/gate/gate",
+    "pages/temp-gate/temp-gate",
+    "pages/pet/pet",
+    "pages/scan/scan"
+  ],
+  "window": {
+    "backgroundColor": "#F7F6F3",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "navigationBarTitleText": "库吉",
+    "navigationBarTextStyle": "black"
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents"
+}

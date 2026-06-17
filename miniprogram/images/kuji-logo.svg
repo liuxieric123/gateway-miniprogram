@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none" stroke="#2E7D32" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- 外圆 -->
+  <circle cx="100" cy="100" r="82" />
+  <!-- 地面 -->
+  <path d="M35 150 Q100 147 165 150" stroke-width="4" />
+  <!-- 机箱 -->
+  <rect x="50" y="95" width="36" height="55" rx="5" />
+  <!-- 顶盖 -->
+  <path d="M48 95 Q68 91 88 95" stroke-width="4" />
+  <!-- 闸杆 -->
+  <path d="M84 112 Q120 110 155 108" stroke-width="7" />
+  <!-- 杆头 -->
+  <circle cx="155" cy="108" r="5" fill="#2E7D32" stroke="none" />
+  <!-- 小房子屋顶 -->
+  <path d="M110 60 L140 35 L170 60" stroke-width="4" />
+  <!-- 房子门 -->
+  <path d="M125 60 L125 85" stroke-width="4" />
+  <path d="M155 60 L155 85" stroke-width="4" />
+  <path d="M125 85 Q140 82 155 85" stroke-width="4" />
+</svg>

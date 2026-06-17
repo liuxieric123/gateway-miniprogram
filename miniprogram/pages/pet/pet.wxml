@@ -1,0 +1,76 @@
+<!--pages/pet/pet.wxml-->
+<view class="container">
+  <!-- 宠物信息卡片 -->
+  <view class="pet-card">
+    <view class="pet-avatar">{{petInfo.avatar}}</view>
+    <view class="pet-info">
+      <view class="pet-name">{{petInfo.name}}</view>
+      <view class="pet-detail">{{petInfo.type}} · {{petInfo.age}}</view>
+    </view>
+    <view class="today-count">
+      <view class="count-num">{{todayCount}}</view>
+      <view class="count-label">今日喂食</view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-grid">
+    <view class="action-btn primary" bindtap="manualFeed">
+      <text class="btn-icon">🍖</text>
+      <text class="btn-text">手动喂食</text>
+    </view>
+    <view class="action-btn secondary" bindtap="showQrCode">
+      <text class="btn-icon">📷</text>
+      <text class="btn-text">喂食二维码</text>
+    </view>
+  </view>
+
+  <!-- 喂食记录 -->
+  <view class="records-section">
+    <view class="records-header">
+      <text class="records-title">🍽️ 喂食记录</text>
+      <text class="records-clear" bindtap="clearRecords" wx:if="{{feedRecords.length > 0}}">清空</text>
+    </view>
+
+    <view class="records-list" wx:if="{{feedRecords.length > 0}}">
+      <view class="record-item" wx:for="{{feedRecords}}" wx:key="id">
+        <view class="record-icon">🦴</view>
+        <view class="record-content">
+          <view class="record-source">{{item.source}}</view>
+          <view class="record-meta">
+            <text class="record-time">{{item.timeStr}}</text>
+            <text class="record-feeder" wx:if="{{item.feeder}}">by {{item.feeder}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="records-empty" wx:else>
+      <view class="empty-icon">🐾</view>
+      <text>还没有喂食记录哦</text>
+    </view>
+  </view>
+
+  <!-- 二维码弹窗 -->
+  <view class="qr-modal {{showQrModal ? 'show' : ''}}" bindtap="closeQrModal">
+    <view class="qr-content" catchtap="preventClose">
+      <view class="qr-header">
+        <text class="qr-title">扫码帮{{petInfo.name}}喂食</text>
+        <text class="qr-close" bindtap="closeQrModal">✕</text>
+      </view>
+      <view class="qr-body">
+        <!-- 模拟二维码 -->
+        <view class="qr-placeholder">
+          <view class="qr-pattern">
+            <view class="qr-cell" wx:for="{{64}}" wx:key="index"></view>
+          </view>
+        </view>
+        <view class="qr-hint">请用微信扫一扫</view>
+        <view class="qr-tip">扫码后将自动记录一次喂食</view>
+      </view>
+      <view class="qr-footer">
+        <button class="qr-save-btn" bindtap="saveQrCode">保存到相册</button>
+      </view>
+    </view>
+  </view>
+</view>

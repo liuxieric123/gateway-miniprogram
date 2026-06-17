@@ -1,0 +1,312 @@
+/* pages/pet/pet.wxss */
+page {
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+.container {
+  padding: 30rpx;
+}
+
+/* 宠物卡片 */
+.pet-card {
+  background: linear-gradient(135deg, #FF9A56 0%, #FF6B6B 100%);
+  border-radius: 24rpx;
+  padding: 40rpx;
+  display: flex;
+  align-items: center;
+  margin-bottom: 30rpx;
+  box-shadow: 0 8rpx 30rpx rgba(255, 107, 107, 0.3);
+}
+
+.pet-avatar {
+  font-size: 100rpx;
+  margin-right: 30rpx;
+}
+
+.pet-info {
+  flex: 1;
+}
+
+.pet-name {
+  font-size: 44rpx;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 8rpx;
+}
+
+.pet-detail {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.today-count {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 16rpx;
+  padding: 16rpx 24rpx;
+}
+
+.count-num {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: white;
+}
+
+.count-label {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* 操作按钮 */
+.action-grid {
+  display: flex;
+  gap: 24rpx;
+  margin-bottom: 30rpx;
+}
+
+.action-btn {
+  flex: 1;
+  border-radius: 20rpx;
+  padding: 40rpx 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+}
+
+.action-btn:active {
+  transform: scale(0.97);
+}
+
+.action-btn.primary {
+  background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+}
+
+.action-btn.secondary {
+  background: white;
+}
+
+.btn-icon {
+  font-size: 60rpx;
+  margin-bottom: 12rpx;
+}
+
+.btn-text {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: white;
+}
+
+.action-btn.secondary .btn-text {
+  color: #333;
+}
+
+/* 记录区域 */
+.records-section {
+  background: white;
+  border-radius: 24rpx;
+  padding: 30rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.06);
+}
+
+.records-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.records-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.records-clear {
+  font-size: 26rpx;
+  color: #FF5722;
+}
+
+.records-list {
+  max-height: 600rpx;
+  overflow-y: auto;
+}
+
+.record-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.record-item:last-child {
+  border-bottom: none;
+}
+
+.record-icon {
+  font-size: 40rpx;
+  margin-right: 20rpx;
+}
+
+.record-content {
+  flex: 1;
+}
+
+.record-source {
+  font-size: 30rpx;
+  color: #333;
+  margin-bottom: 6rpx;
+}
+
+.record-meta {
+  display: flex;
+  gap: 16rpx;
+}
+
+.record-time {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.record-feeder {
+  font-size: 24rpx;
+  color: #4CAF50;
+}
+
+.records-empty {
+  text-align: center;
+  padding: 80rpx 0;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+}
+
+.records-empty text {
+  font-size: 28rpx;
+  color: #bbb;
+}
+
+/* 二维码弹窗 */
+.qr-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  z-index: 1000;
+}
+
+.qr-modal.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.qr-content {
+  background: white;
+  border-radius: 24rpx;
+  width: 80%;
+  max-width: 560rpx;
+  overflow: hidden;
+}
+
+.qr-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.qr-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.qr-close {
+  font-size: 36rpx;
+  color: #999;
+  padding: 10rpx;
+}
+
+.qr-body {
+  padding: 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.qr-placeholder {
+  width: 360rpx;
+  height: 360rpx;
+  background: #f5f5f5;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24rpx;
+}
+
+.qr-pattern {
+  width: 300rpx;
+  height: 300rpx;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  gap: 2rpx;
+}
+
+.qr-cell {
+  background: #333;
+  border-radius: 2rpx;
+}
+
+.qr-cell:nth-child(3n) {
+  background: transparent;
+}
+
+.qr-cell:nth-child(5n+2) {
+  background: transparent;
+}
+
+.qr-hint {
+  font-size: 30rpx;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 8rpx;
+}
+
+.qr-tip {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.qr-footer {
+  padding: 0 30rpx 30rpx;
+}
+
+.qr-save-btn {
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+  background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+  color: white;
+  font-size: 32rpx;
+  font-weight: 600;
+  border-radius: 44rpx;
+  border: none;
+}
+
+.qr-save-btn::after {
+  border: none;
+}

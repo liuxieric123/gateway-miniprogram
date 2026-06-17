@@ -1,0 +1,71 @@
+<!--pages/scan/scan.wxml-->
+<view class="container">
+  <!-- 确认喂食状态 -->
+  <view class="content {{status}}" wx:if="{{status === 'confirming'}}">
+    <view class="pet-greeting">
+      <view class="pet-avatar-large">{{petInfo.avatar}}</view>
+      <view class="greeting-text">
+        <view class="greeting-title">你好呀！</view>
+        <view class="greeting-sub">我是{{petInfo.name}}，我饿啦～</view>
+      </view>
+    </view>
+
+    <view class="action-area">
+      <view class="action-hint">点击下方按钮帮{{petInfo.name}}记录一次喂食</view>
+      <button class="feed-btn" bindtap="confirmFeed">
+        <text class="btn-icon">🍖</text>
+        <text class="btn-label">确认喂食</text>
+      </button>
+    </view>
+
+    <view class="footer-hint">
+      <text>每次扫码都会记录一次喂食哦</text>
+    </view>
+  </view>
+
+  <!-- 成功状态 -->
+  <view class="content success-content" wx:if="{{status === 'success'}}">
+    <view class="success-animation">
+      <view class="success-circle">
+        <text class="success-icon">✓</text>
+      </view>
+    </view>
+
+    <view class="thanks-section">
+      <view class="thanks-title">🎉 喂食成功！</view>
+      <view class="thanks-text">
+        <text>谢谢你的爱心喂食！</text>
+        <text>{{petInfo.name}}吃得可香啦～</text>
+      </view>
+    </view>
+
+    <view class="record-detail" wx:if="{{recordInfo}}">
+      <view class="detail-item">
+        <text class="detail-label">喂食时间</text>
+        <text class="detail-value">{{recordInfo.timeStr}}</text>
+      </view>
+      <view class="detail-item">
+        <text class="detail-label">喂食者</text>
+        <text class="detail-value">{{recordInfo.feeder}}</text>
+      </view>
+      <view class="detail-item">
+        <text class="detail-label">今日第</text>
+        <text class="detail-value highlight">{{recordInfo.todayCount}}</text>
+        <text class="detail-label">次喂食</text>
+      </view>
+    </view>
+
+    <view class="action-buttons">
+      <button class="action-btn secondary" bindtap="goHome">返回首页</button>
+      <button class="action-btn primary" bindtap="goToPet">查看记录</button>
+    </view>
+  </view>
+
+  <!-- 错误状态 -->
+  <view class="content error-content" wx:if="{{status === 'error'}}">
+    <view class="error-icon">⚠️</view>
+    <view class="error-title">无效的二维码</view>
+    <view class="error-text">这个二维码似乎不正确呢</view>
+    <button class="action-btn primary" bindtap="goHome">返回首页</button>
+  </view>
+</view>
