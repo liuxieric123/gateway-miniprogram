@@ -27,7 +27,7 @@
       disabled="{{isLoading || cooldown}}"
     >
       <image class="btn-icon-img" src="/images/kuji-open.svg" mode="aspectFit" />
-      <text class="btn-text">开门</text>
+      <text class="btn-text">开</text>
     </button>
 
     <button
@@ -36,7 +36,7 @@
       disabled="{{isLoading || cooldown}}"
     >
       <image class="btn-icon-img" src="/images/kuji-close.svg" mode="aspectFit" />
-      <text class="btn-text">关门</text>
+      <text class="btn-text">关</text>
     </button>
 
     <view class="temp-link-bar" bindtap="generateTempLink">

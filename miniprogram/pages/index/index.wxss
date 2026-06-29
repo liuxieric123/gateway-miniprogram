@@ -5,7 +5,7 @@ page {
 }
 
 .container {
-  padding: 60rpx 40rpx;
+  padding: 20rpx 40rpx 60rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -17,9 +17,39 @@ page {
 .hero {
   width: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20rpx;
+  margin-bottom: 10rpx;
+  padding-top: 10rpx;
+}
+
+.pipi-gif {
+  width: 370rpx;
+  height: 370rpx;
+  display: block;
+  align-self: flex-end;
+  margin-right: 20rpx;
+  margin-top: -50rpx;
+  margin-bottom: 10rpx;
+  animation: pipiFloatBreathe 3s ease-in-out infinite;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes pipiFloatBreathe {
+  0%, 100% {
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-10rpx) scale(1.1) rotate(-4deg);
+  }
+  50% {
+    transform: translateY(-45rpx) scale(1.28) rotate(0deg);
+  }
+  75% {
+    transform: translateY(-10rpx) scale(1.1) rotate(4deg);
+  }
 }
 
 .handwriting-wrapper {
@@ -30,6 +60,9 @@ page {
   align-items: center;
   justify-content: center;
   position: relative;
+  margin-top: -35rpx;
+  left: -20rpx;
+  z-index: 100;
 }
 
 .handwriting-yo {
@@ -39,7 +72,7 @@ page {
   animation: yoFloat 2.5s ease-in-out infinite;
   transform-origin: center center;
   position: absolute;
-  top: -320rpx;
+  top: -220rpx;
   left: -220rpx;
 }
 
@@ -86,6 +119,9 @@ page {
   width: 100%;
   max-width: 700rpx;
   flex-shrink: 0;
+  margin-top: -45rpx;
+  position: relative;
+  z-index: 10;
 }
 
 .menu-card {
@@ -97,11 +133,12 @@ page {
   align-items: center;
   box-shadow: 0 8rpx 30rpx rgba(0, 0, 0, 0.08);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  animation: cardFloat 3s ease-in-out infinite;
+  transform: scale(0.8);
+  transform-origin: center center;
 }
 
 .menu-card-hover {
-  transform: scale(0.98);
+  transform: scale(0.78);
   box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
 }
 
@@ -115,13 +152,13 @@ page {
 }
 
 .menu-icon-img {
-  width: 160rpx;
-  height: 160rpx;
-  margin-bottom: 30rpx;
+  width: 265rpx;
+  height: 265rpx;
+  margin-bottom: 36rpx;
 }
 
 .menu-title {
-  font-size: 56rpx;
+  font-size: 60rpx;
   font-weight: 700;
   color: #37352F;
   margin-bottom: 18rpx;
@@ -129,7 +166,7 @@ page {
 }
 
 .menu-desc {
-  font-size: 32rpx;
+  font-size: 34rpx;
   color: #6B6B6B;
   line-height: 1.5;
 }

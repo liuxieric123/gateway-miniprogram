@@ -1,6 +1,9 @@
 <!--index.wxml-->
 <view class="container">
   <view class="hero">
+    <!-- 皮皮悬浮动图 -->
+    <image class="pipi-gif" src="{{pipiGifUrl}}" mode="aspectFit" />
+
     <view class="handwriting-wrapper">
       <image class="handwriting-yo" src="/images/kuji-title-yo.png" mode="aspectFit" />
       <image class="handwriting-kuji" src="/images/kuji-title-kuji.png" mode="aspectFit" />

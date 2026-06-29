@@ -29,3 +29,6 @@ dist/
 # Temporary files
 .temp/
 .cache/
+
+# Python virtual environment
+venv/

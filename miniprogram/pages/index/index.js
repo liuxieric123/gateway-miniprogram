@@ -1,6 +1,9 @@
 // index.js
 Page({
-  data: {},
+  data: {
+    // 皮皮动图地址
+    pipiGifUrl: '/images/pipi.gif'
+  },
 
   onLoad() {
     // 页面加载时检查是否有扫码进入的喂食请求
@@ -11,6 +14,7 @@ Page({
         url: '/pages/scan/scan'
       });
     }
+
   },
 
   goToGate() {

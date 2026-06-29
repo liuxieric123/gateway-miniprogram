@@ -120,14 +120,14 @@ page {
 
 .gate-btn {
   width: 100%;
-  height: 300rpx;
-  border-radius: 36rpx;
+  height: 380rpx;
+  border-radius: 44rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 16rpx;
-  padding: 30rpx;
+  gap: 24rpx;
+  padding: 40rpx;
   background: #FFFFFF;
   border: 1rpx solid #E9E9E7;
   transition: background 0.15s;
@@ -155,29 +155,31 @@ page {
 }
 
 .btn-icon-img {
-  width: 150rpx;
-  height: 150rpx;
+  width: 240rpx;
+  height: 240rpx;
 }
 
 .btn-text {
-  font-size: 64rpx;
+  font-size: 76rpx;
   font-weight: 700;
   color: #37352F;
-  letter-spacing: 4rpx;
+  letter-spacing: 6rpx;
 }
 
-/* 临时链接入口 */
+/* 临时链接入口 - 警示效果 */
 .temp-link-bar {
   background: #FFFFFF;
   border: 1rpx solid #E9E9E7;
-  border-radius: 36rpx;
-  padding: 36rpx;
+  border-radius: 32rpx;
+  padding: 28rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12rpx;
+  gap: 10rpx;
   margin-top: 20rpx;
   transition: background 0.15s;
+  animation: warningPulse 3s ease-in-out infinite;
+  position: relative;
 }
 
 .temp-link-bar:active {
@@ -185,13 +187,42 @@ page {
 }
 
 .temp-link-icon {
-  font-size: 44rpx;
+  font-size: 38rpx;
+  animation: warningShake 0.6s ease-in-out infinite;
+  display: inline-block;
 }
 
 .temp-link-text {
-  font-size: 34rpx;
+  font-size: 30rpx;
   color: #37352F;
   font-weight: 600;
+}
+
+@keyframes warningPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20rpx 8rpx rgba(255, 193, 7, 0.2);
+  }
+}
+
+@keyframes warningShake {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  20% {
+    transform: rotate(-12deg);
+  }
+  40% {
+    transform: rotate(12deg);
+  }
+  60% {
+    transform: rotate(-8deg);
+  }
+  80% {
+    transform: rotate(8deg);
+  }
 }
 
 /* 临时链接弹窗 */
