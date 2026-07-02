@@ -54,9 +54,7 @@
       </view>
       <view class="temp-body">
         <view class="temp-hint">有效期至今天 {{tempExpireTime}}（1小时）</view>
-        <view class="temp-link-box" selectable>{{tempLink}}</view>
         <view class="temp-actions">
-          <button class="temp-btn copy" bindtap="copyTempLink">复制链接</button>
           <button class="temp-btn share" open-type="share">分享给好友</button>
         </view>
       </view>

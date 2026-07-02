@@ -202,29 +202,6 @@ Page({
     this.setData({ showTempModal: false });
   },
 
-  // ============================================
-  // 复制临时链接
-  // ============================================
-  copyTempLink() {
-    wx.setClipboardData({
-      data: this.data.tempLink,
-      success: () => {
-        wx.showToast({ title: '链接已复制', icon: 'success' });
-      }
-    });
-  },
-
-  // ============================================
-  // 分享临时链接
-  // ============================================
-  shareTempLink() {
-    // 唤起系统分享
-    wx.showShareMenu({
-      withShareTicket: true,
-      menus: ['shareAppMessage']
-    });
-  },
-
   onShareAppMessage() {
     return {
       title: '临时开关门',
