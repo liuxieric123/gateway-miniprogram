@@ -38,6 +38,16 @@ Page({
     wx.navigateBack();
   },
 
+  // 上报用户活跃（登录/进入页面）
+  reportActivity() {
+    wx.cloud.callFunction({
+      name: 'gateFunctions',
+      data: { type: 'reportActivity' }
+    }).catch(err => {
+      console.error('上报活跃失败:', err);
+    });
+  },
+
   // ============================================
   // 检查用户权限
   // ============================================
@@ -70,6 +80,8 @@ Page({
           hasPermission: true,
           openid: result.openid || ''
         });
+        // 记录用户登录/进入时间
+        this.reportActivity();
       } else {
         this.setData({
           hasPermission: false,

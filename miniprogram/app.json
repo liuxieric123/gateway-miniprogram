@@ -4,7 +4,8 @@
     "pages/gate/gate",
     "pages/temp-gate/temp-gate",
     "pages/pet/pet",
-    "pages/scan/scan"
+    "pages/scan/scan",
+    "pages/admin/admin"
   ],
   "window": {
     "backgroundColor": "#F7F6F3",

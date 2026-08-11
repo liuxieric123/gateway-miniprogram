@@ -166,6 +166,9 @@ const createTempToken = async (event) => {
       },
     });
 
+    // 更新创建者最后活跃时间（分享行为）
+    await updateUserLastSeen(perm.openid);
+
     return {
       success: true,
       token,
@@ -298,7 +301,10 @@ const gateControl = async (event) => {
     }
   }
 
-  // 4. 记录到数据库
+  // 4. 更新操作者最后活跃时间（开关门行为）
+  await updateUserLastSeen(operatorInfo.openid);
+
+  // 5. 记录到数据库
   try {
     await db.collection(COLLECTION_GATE_LOGS).add({
       data: {
@@ -387,8 +393,8 @@ const addAuthorizedUser = async (event) => {
   const { targetOpenid, nickname, role = "user" } = event;
 
   const perm = await checkPermission();
-  if (!perm.hasPermission || perm.userInfo?.role !== "admin") {
-    return { success: false, errMsg: "只有管理员可以添加用户" };
+  if (!perm.hasPermission || perm.userInfo?.role !== "super_admin") {
+    return { success: false, errMsg: "只有超级管理员可以添加用户" };
   }
 
   if (!targetOpenid) {
@@ -421,6 +427,206 @@ const addAuthorizedUser = async (event) => {
 };
 
 // ============================================
+// 更新用户最后活跃时间
+// ============================================
+const updateUserLastSeen = async (openid) => {
+  if (!openid || openid.startsWith("temp_")) {
+    return;
+  }
+  try {
+    const res = await db
+      .collection(COLLECTION_AUTH_USERS)
+      .where({ openid })
+      .get();
+
+    if (res.data.length > 0) {
+      await db
+        .collection(COLLECTION_AUTH_USERS)
+        .doc(res.data[0]._id)
+        .update({
+          data: {
+            lastSeen: db.serverDate(),
+          },
+        });
+    }
+  } catch (e) {
+    console.error("[updateUserLastSeen] 更新失败:", e);
+  }
+};
+
+// ============================================
+// 上报用户活跃（登录/进入页面）
+// ============================================
+const reportActivity = async () => {
+  const perm = await checkPermission();
+  if (!perm.hasPermission) {
+    return { success: false, errMsg: perm.errMsg };
+  }
+
+  await updateUserLastSeen(perm.openid);
+  return { success: true };
+};
+
+// ============================================
+// 检查是否为超级管理员
+// ============================================
+const checkSuperAdmin = async () => {
+  console.log("[checkSuperAdmin] 开始校验");
+  const perm = await checkPermission();
+  console.log("[checkSuperAdmin] checkPermission 结果:", JSON.stringify(perm));
+  if (!perm.hasPermission || perm.userInfo?.role !== "super_admin") {
+    return {
+      isSuperAdmin: false,
+      ...perm,
+      errMsg: perm.hasPermission ? "权限不足，需要超级管理员" : perm.errMsg,
+    };
+  }
+  return { isSuperAdmin: true, ...perm };
+};
+
+// ============================================
+// 获取所有授权用户（仅超级管理员）
+// ============================================
+const getAuthorizedUsers = async () => {
+  console.log("[getAuthorizedUsers] 开始执行");
+  const perm = await checkSuperAdmin();
+  if (!perm.isSuperAdmin) {
+    console.log("[getAuthorizedUsers] 权限不足:", perm.errMsg);
+    return { success: false, errMsg: perm.errMsg };
+  }
+
+  try {
+    console.log("[getAuthorizedUsers] 开始查询数据库");
+    const res = await db
+      .collection(COLLECTION_AUTH_USERS)
+      .orderBy("createTime", "desc")
+      .get();
+    console.log("[getAuthorizedUsers] 查询成功, 数量:", res.data.length);
+
+    return { success: true, data: res.data };
+  } catch (e) {
+    console.error("[getAuthorizedUsers] 查询授权用户失败:", e);
+    return { success: false, errMsg: "查询授权用户失败: " + e.message };
+  }
+};
+
+// ============================================
+// 更新授权用户（仅超级管理员）
+// ============================================
+const updateAuthorizedUser = async (event) => {
+  const { _id, nickname, role } = event;
+
+  const perm = await checkSuperAdmin();
+  if (!perm.isSuperAdmin) {
+    return { success: false, errMsg: perm.errMsg };
+  }
+
+  if (!_id) {
+    return { success: false, errMsg: "请提供用户 ID" };
+  }
+
+  const updateData = {};
+  if (nickname !== undefined) updateData.nickname = nickname;
+  if (role !== undefined) updateData.role = role;
+
+  if (Object.keys(updateData).length === 0) {
+    return { success: false, errMsg: "没有需要更新的字段" };
+  }
+
+  try {
+    await db.collection(COLLECTION_AUTH_USERS).doc(_id).update({
+      data: updateData,
+    });
+    return { success: true, message: "更新成功" };
+  } catch (e) {
+    console.error("更新授权用户失败:", e);
+    return { success: false, errMsg: "更新失败: " + e.message };
+  }
+};
+
+// ============================================
+// 删除授权用户（仅超级管理员）
+// ============================================
+const deleteAuthorizedUser = async (event) => {
+  const { _id } = event;
+
+  const perm = await checkSuperAdmin();
+  if (!perm.isSuperAdmin) {
+    return { success: false, errMsg: perm.errMsg };
+  }
+
+  if (!_id) {
+    return { success: false, errMsg: "请提供用户 ID" };
+  }
+
+  try {
+    await db.collection(COLLECTION_AUTH_USERS).doc(_id).remove();
+    return { success: true, message: "删除成功" };
+  } catch (e) {
+    console.error("删除授权用户失败:", e);
+    return { success: false, errMsg: "删除失败: " + e.message };
+  }
+};
+
+// ============================================
+// 获取临时令牌列表（仅超级管理员）
+// ============================================
+const getTempTokens = async (event) => {
+  const { limit = 100 } = event;
+  console.log("[getTempTokens] 开始执行, limit:", limit);
+
+  const perm = await checkSuperAdmin();
+  if (!perm.isSuperAdmin) {
+    console.log("[getTempTokens] 权限不足:", perm.errMsg);
+    return { success: false, errMsg: perm.errMsg };
+  }
+
+  try {
+    console.log("[getTempTokens] 开始查询数据库");
+    const res = await db
+      .collection(COLLECTION_TEMP_TOKENS)
+      .orderBy("createTime", "desc")
+      .limit(limit)
+      .get();
+    console.log("[getTempTokens] 查询成功, 数量:", res.data.length);
+
+    return { success: true, data: res.data };
+  } catch (e) {
+    console.error("[getTempTokens] 查询临时令牌失败:", e);
+    return { success: false, errMsg: "查询临时令牌失败: " + e.message };
+  }
+};
+
+// ============================================
+// 获取管理员视角操作日志（仅超级管理员，支持分页）
+// ============================================
+const getAdminGateLogs = async (event) => {
+  const { limit = 50 } = event;
+  console.log("[getAdminGateLogs] 开始执行, limit:", limit);
+
+  const perm = await checkSuperAdmin();
+  if (!perm.isSuperAdmin) {
+    console.log("[getAdminGateLogs] 权限不足:", perm.errMsg);
+    return { success: false, errMsg: perm.errMsg };
+  }
+
+  try {
+    console.log("[getAdminGateLogs] 开始查询数据库");
+    const res = await db
+      .collection(COLLECTION_GATE_LOGS)
+      .orderBy("createTime", "desc")
+      .limit(limit)
+      .get();
+    console.log("[getAdminGateLogs] 查询成功, 数量:", res.data.length);
+
+    return { success: true, data: res.data };
+  } catch (e) {
+    console.error("[getAdminGateLogs] 查询操作日志失败:", e);
+    return { success: false, errMsg: "查询操作日志失败: " + e.message };
+  }
+};
+
+// ============================================
 // 云函数入口
 // ============================================
 exports.main = async (event, context) => {
@@ -439,6 +645,18 @@ exports.main = async (event, context) => {
       return await getUserPermission();
     case "addAuthorizedUser":
       return await addAuthorizedUser(event);
+    case "getAuthorizedUsers":
+      return await getAuthorizedUsers();
+    case "updateAuthorizedUser":
+      return await updateAuthorizedUser(event);
+    case "deleteAuthorizedUser":
+      return await deleteAuthorizedUser(event);
+    case "getTempTokens":
+      return await getTempTokens(event);
+    case "getAdminGateLogs":
+      return await getAdminGateLogs(event);
+    case "reportActivity":
+      return await reportActivity();
     default:
       return { success: false, errMsg: "未知的操作类型: " + event.type };
   }
