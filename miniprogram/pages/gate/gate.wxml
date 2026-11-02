@@ -6,7 +6,18 @@
   <image class="nav-title-img" src="/images/kuji-title-kuji.png" mode="heightFix" />
 </view>
 
-<view class="container" style="padding-top: {{navHeight}}px;">
+<!-- 滚动通知条 -->
+<view class="notice-bar" wx:if="{{noticeBarVisible}}" style="top: {{navHeight + statusBarHeight}}px;">
+  <text class="notice-icon">📢</text>
+  <view class="notice-marquee">
+    <view class="notice-track">
+      <text class="notice-text">{{notice.content}}</text>
+      <text class="notice-text">{{notice.content}}</text>
+    </view>
+  </view>
+</view>
+
+<view class="container" style="padding-top: {{navHeight + (noticeBarVisible ? statusBarHeight + noticeBarHeight : 0)}}px;">
   <!-- 无权限提示 -->
   <view class="no-permission" wx:if="{{!hasPermission}}">
     <view class="lock-icon">🔒</view>

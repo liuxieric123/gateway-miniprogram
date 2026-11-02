@@ -10,6 +10,8 @@ const _ = db.command;
 const COLLECTION_GATE_LOGS = "gate_logs";
 const COLLECTION_AUTH_USERS = "authorized_users";
 const COLLECTION_TEMP_TOKENS = "temp_tokens";
+const COLLECTION_SETTINGS = "settings";
+const NOTICE_DOC_ID = "gate_notice";
 
 // ============================================
 // 生成随机 token
@@ -79,10 +81,6 @@ const checkTempToken = async (event) => {
       return { valid: false, errMsg: "令牌已失效" };
     }
 
-    if (tokenData.used === true) {
-      return { valid: false, errMsg: "该链接已被使用，无法再次操作" };
-    }
-
     const now = new Date();
     const expireAt = tokenData.expireAt instanceof Date
       ? tokenData.expireAt
@@ -141,7 +139,7 @@ const createTempToken = async (event) => {
       if (activeTokens.total >= 3) {
         return {
           success: false,
-          errMsg: `您已有 ${activeTokens.total} 个有效的临时链接，请先等待它们过期或被使用后再创建新的`,
+          errMsg: `您已有 ${activeTokens.total} 个有效的临时链接，请先等待它们过期后再创建新的`,
         };
       }
     } catch (e) {
@@ -225,7 +223,8 @@ const gateControl = async (event) => {
   const API_HOST = "139.155.148.224";
   const API_PORT = 8080;
   const API_KEY = "wechat_eric_012345";
-  const apiPath = action === "open" ? "/api/v1/door/open" : "/api/v1/door/close";
+  // 硬件接线反向：开/关指令对调，open 实际发关门指令，close 实际发开门指令
+  const apiPath = action === "open" ? "/api/v1/door/close" : "/api/v1/door/open";
 
   const callDoorApi = () => {
     return new Promise((resolve, reject) => {
@@ -277,34 +276,10 @@ const gateControl = async (event) => {
   }
   // ============================================================
 
-  // 3. 如果是临时令牌，标记为已使用（一次性）
-  if (tempToken && esphomeResult.success) {
-    try {
-      const tokenRes = await db
-        .collection(COLLECTION_TEMP_TOKENS)
-        .where({ token: tempToken })
-        .get();
-      if (tokenRes.data.length > 0) {
-        await db
-          .collection(COLLECTION_TEMP_TOKENS)
-          .doc(tokenRes.data[0]._id)
-          .update({
-            data: {
-              used: true,
-              status: "used",
-              usedTime: db.serverDate(),
-            },
-          });
-      }
-    } catch (e) {
-      console.error("标记令牌已使用失败:", e);
-    }
-  }
-
-  // 4. 更新操作者最后活跃时间（开关门行为）
+  // 3. 更新操作者最后活跃时间（开关门行为）
   await updateUserLastSeen(operatorInfo.openid);
 
-  // 5. 记录到数据库
+  // 4. 记录到数据库
   try {
     await db.collection(COLLECTION_GATE_LOGS).add({
       data: {
@@ -627,6 +602,56 @@ const getAdminGateLogs = async (event) => {
 };
 
 // ============================================
+// 获取滚动通知（所有用户可读）
+// ============================================
+const getNotice = async () => {
+  try {
+    const res = await db.collection(COLLECTION_SETTINGS).doc(NOTICE_DOC_ID).get();
+    return {
+      success: true,
+      data: {
+        enabled: !!res.data.enabled,
+        content: res.data.content || "",
+      },
+    };
+  } catch (e) {
+    // 文档或集合不存在时视为未开启通知
+    return { success: true, data: { enabled: false, content: "" } };
+  }
+};
+
+// ============================================
+// 设置滚动通知（仅超级管理员）
+// ============================================
+const setNotice = async (event) => {
+  const perm = await checkSuperAdmin();
+  if (!perm.isSuperAdmin) {
+    return { success: false, errMsg: perm.errMsg };
+  }
+
+  const content = String(event.content || "").trim();
+  const enabled = !!event.enabled;
+
+  if (enabled && !content) {
+    return { success: false, errMsg: "开启通知前请先填写通知内容" };
+  }
+
+  try {
+    await db.collection(COLLECTION_SETTINGS).doc(NOTICE_DOC_ID).set({
+      data: {
+        content,
+        enabled,
+        updateTime: db.serverDate(),
+      },
+    });
+    return { success: true, message: "保存成功" };
+  } catch (e) {
+    console.error("保存通知失败:", e);
+    return { success: false, errMsg: "保存失败: " + e.message };
+  }
+};
+
+// ============================================
 // 云函数入口
 // ============================================
 exports.main = async (event, context) => {
@@ -657,6 +682,10 @@ exports.main = async (event, context) => {
       return await getAdminGateLogs(event);
     case "reportActivity":
       return await reportActivity();
+    case "getNotice":
+      return await getNotice();
+    case "setNotice":
+      return await setNotice(event);
     default:
       return { success: false, errMsg: "未知的操作类型: " + event.type };
   }

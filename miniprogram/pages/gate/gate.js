@@ -17,6 +17,10 @@ Page({
     // 自定义导航栏高度
     statusBarHeight: 20,
     navHeight: 64,
+    // 滚动通知
+    notice: { enabled: false, content: '' },
+    noticeBarVisible: false,
+    noticeBarHeight: 32,
   },
 
   onLoad() {
@@ -24,8 +28,11 @@ Page({
     this.setData({
       statusBarHeight: sysInfo.statusBarHeight,
       navHeight: sysInfo.statusBarHeight + 44,
+      // 通知条高度 64rpx 换算为 px
+      noticeBarHeight: Math.round((sysInfo.windowWidth * 64) / 750),
     });
     this.checkUserPermission();
+    this.loadNotice();
   },
 
   onUnload() {
@@ -36,6 +43,25 @@ Page({
 
   goBack() {
     wx.navigateBack();
+  },
+
+  // ============================================
+  // 加载滚动通知
+  // ============================================
+  loadNotice() {
+    wx.cloud.callFunction({
+      name: 'gateFunctions',
+      data: { type: 'getNotice' }
+    }).then(res => {
+      const result = res.result || {};
+      const notice = (result.success && result.data) || { enabled: false, content: '' };
+      this.setData({
+        notice,
+        noticeBarVisible: !!(notice.enabled && notice.content)
+      });
+    }).catch(err => {
+      console.error('加载通知失败:', err);
+    });
   },
 
   // 上报用户活跃（登录/进入页面）

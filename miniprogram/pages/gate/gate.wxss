@@ -48,6 +48,57 @@ page {
   box-sizing: border-box;
 }
 
+/* 滚动通知条 */
+.notice-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 64rpx;
+  background: #FFF8E1;
+  display: flex;
+  align-items: center;
+  padding: 0 24rpx;
+  z-index: 999;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+  box-sizing: border-box;
+}
+
+.notice-icon {
+  font-size: 30rpx;
+  margin-right: 16rpx;
+}
+
+.notice-marquee {
+  flex: 1;
+  height: 64rpx;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.notice-track {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  animation: noticeScroll 12s linear infinite;
+}
+
+.notice-text {
+  white-space: nowrap;
+  font-size: 28rpx;
+  color: #8D6E00;
+  padding-right: 120rpx;
+}
+
+@keyframes noticeScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
 /* 无权限提示 */
 .no-permission {
   background: #FFFFFF;

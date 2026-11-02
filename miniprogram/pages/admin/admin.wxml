@@ -33,6 +33,11 @@
         data-tab="tokens"
         bindtap="switchTab"
       >临时链接</view>
+      <view
+        class="tab-item {{currentTab === 'notice' ? 'active' : ''}}"
+        data-tab="notice"
+        bindtap="switchTab"
+      >通知公告</view>
     </view>
 
     <!-- 用户管理 -->
@@ -120,6 +125,44 @@
           <view>使用时间：{{item.usedTimeText}}</view>
         </view>
       </view>
+    </view>
+
+    <!-- 通知公告 -->
+    <view wx:if="{{currentTab === 'notice'}}" class="panel">
+      <view class="panel-header">
+        <view class="panel-title">滚动通知</view>
+        <view class="refresh-btn" bindtap="loadNotice">刷新</view>
+      </view>
+
+      <view class="card">
+        <view class="form-item">
+          <view class="form-label">通知内容</view>
+          <textarea
+            class="form-textarea"
+            placeholder="请输入要滚动播放的通知内容"
+            value="{{noticeForm.content}}"
+            maxlength="200"
+            bindinput="onNoticeInput"
+          ></textarea>
+        </view>
+
+        <view class="notice-switch-row">
+          <view class="notice-switch-label">开启滚动通知</view>
+          <switch
+            checked="{{noticeForm.enabled}}"
+            color="#37352F"
+            bindchange="onNoticeToggle"
+          />
+        </view>
+
+        <button
+          class="modal-btn confirm notice-save-btn"
+          bindtap="saveNotice"
+          disabled="{{noticeSaving}}"
+        >{{noticeSaving ? '保存中...' : '保存'}}</button>
+      </view>
+
+      <view class="notice-tip">开启后，用户打开开关门页面时会在顶部滚动播放该通知；关闭开关后通知不再显示。</view>
     </view>
 
     <!-- 用户表单弹窗 -->

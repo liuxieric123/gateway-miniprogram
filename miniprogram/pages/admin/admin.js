@@ -20,7 +20,13 @@ Page({
       { value: 'admin', label: '管理员 (admin)' },
       { value: 'super_admin', label: '超级管理员 (super_admin)' }
     ],
-    roleIndex: 0
+    roleIndex: 0,
+    // 滚动通知表单
+    noticeForm: {
+      content: '',
+      enabled: false
+    },
+    noticeSaving: false
   },
 
   onLoad() {
@@ -89,12 +95,76 @@ Page({
     if (currentTab === 'users') return this.loadUsers();
     if (currentTab === 'logs') return this.loadLogs();
     if (currentTab === 'tokens') return this.loadTokens();
+    if (currentTab === 'notice') return this.loadNotice();
     return Promise.resolve();
+  },
+
+  // 加载滚动通知
+  loadNotice() {
+    return wx.cloud.callFunction({
+      name: 'gateFunctions',
+      data: { type: 'getNotice' }
+    }).then(res => {
+      const result = res.result || {};
+      const data = (result.success && result.data) || { content: '', enabled: false };
+      this.setData({
+        noticeForm: {
+          content: data.content || '',
+          enabled: !!data.enabled
+        }
+      });
+    }).catch(err => {
+      console.error('加载通知失败:', err);
+      wx.showToast({ title: '加载通知失败', icon: 'none' });
+    });
+  },
+
+  // 通知内容输入
+  onNoticeInput(e) {
+    this.setData({ 'noticeForm.content': e.detail.value });
+  },
+
+  // 通知开关切换
+  onNoticeToggle(e) {
+    this.setData({ 'noticeForm.enabled': e.detail.value });
+  },
+
+  // 保存滚动通知
+  saveNotice() {
+    const { noticeForm, noticeSaving } = this.data;
+    if (noticeSaving) return;
+
+    const content = (noticeForm.content || '').trim();
+    if (noticeForm.enabled && !content) {
+      wx.showToast({ title: '开启前请先填写通知内容', icon: 'none' });
+      return;
+    }
+
+    this.setData({ noticeSaving: true });
+    wx.cloud.callFunction({
+      name: 'gateFunctions',
+      data: {
+        type: 'setNotice',
+        content,
+        enabled: noticeForm.enabled
+      }
+    }).then(res => {
+      const result = res.result || {};
+      this.setData({ noticeSaving: false });
+      if (!result.success) {
+        wx.showToast({ title: result.errMsg || '保存失败', icon: 'none' });
+        return;
+      }
+      wx.showToast({ title: '保存成功', icon: 'success' });
+    }).catch(err => {
+      console.error('保存通知失败:', err);
+      this.setData({ noticeSaving: false });
+      wx.showToast({ title: '保存失败', icon: 'none' });
+    });
   },
 
   // 加载授权用户
   loadUsers() {
-    this.setData({ isLoading: true });
     return wx.cloud.callFunction({
       name: 'gateFunctions',
       data: { type: 'getAuthorizedUsers' }
@@ -109,17 +179,15 @@ Page({
         createTimeText: this.formatTime(item.createTime),
         lastSeenText: this.formatTime(item.lastSeen)
       }));
-      this.setData({ users, isLoading: false });
+      this.setData({ users });
     }).catch(err => {
       console.error('加载用户失败:', err);
       wx.showToast({ title: '加载用户失败', icon: 'none' });
-      this.setData({ isLoading: false });
     });
   },
 
   // 加载操作日志
   loadLogs() {
-    this.setData({ isLoading: true });
     return wx.cloud.callFunction({
       name: 'gateFunctions',
       data: { type: 'getAdminGateLogs', limit: 100 }
@@ -133,17 +201,15 @@ Page({
         ...item,
         createTimeText: this.formatTime(item.createTime)
       }));
-      this.setData({ logs, isLoading: false });
+      this.setData({ logs });
     }).catch(err => {
       console.error('加载日志失败:', err);
       wx.showToast({ title: '加载日志失败', icon: 'none' });
-      this.setData({ isLoading: false });
     });
   },
 
   // 加载临时链接
   loadTokens() {
-    this.setData({ isLoading: true });
     return wx.cloud.callFunction({
       name: 'gateFunctions',
       data: { type: 'getTempTokens', limit: 100 }
@@ -163,11 +229,10 @@ Page({
           usedTimeText: item.usedTime ? this.formatTime(item.usedTime) : ''
         };
       });
-      this.setData({ tokens, isLoading: false });
+      this.setData({ tokens });
     }).catch(err => {
       console.error('加载临时链接失败:', err);
       wx.showToast({ title: '加载临时链接失败', icon: 'none' });
-      this.setData({ isLoading: false });
     });
   },
 

@@ -354,3 +354,39 @@ page {
   background: #37352F;
   color: #fff;
 }
+
+/* 通知公告 */
+.form-textarea {
+  width: 100%;
+  height: 180rpx;
+  background: #F7F6F3;
+  border-radius: 12rpx;
+  padding: 20rpx 24rpx;
+  font-size: 30rpx;
+  color: #37352F;
+  box-sizing: border-box;
+}
+
+.notice-switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28rpx;
+}
+
+.notice-switch-label {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.notice-save-btn {
+  width: 100%;
+  margin-top: 8rpx;
+}
+
+.notice-tip {
+  font-size: 26rpx;
+  color: #999;
+  padding: 0 8rpx;
+  line-height: 1.6;
+}
